@@ -69,7 +69,7 @@ def get_req_create_main_table(table_name: str) -> str:
                 id_animal          INT,
                 id_outcome_subtype INT,
                 id_outcome_type    INT
-    
+                
             );
                 """
     return req
@@ -87,6 +87,7 @@ def get_req_create_animals_table(table_name: str) -> str:
                 id_color1        INT,
                 id_color2        INT,
                 date_of_birth    timestamp without time zone
+                
             );
                 """
     return req
@@ -207,3 +208,13 @@ def create_table_connections(cursor, main_table_name: str, new_table_name: str) 
         else:
             return False
     return True
+
+
+def get_req_append_fk(main_table: str, column: str, small_table: str) -> str:
+    """ добавление ключей """
+    req = f"""
+    ALTER TABLE IF EXISTS {main_table}
+    ADD CONSTRAINT fk_{column} FOREIGN KEY (id_{column})
+    REFERENCES {small_table} (id) MATCH SIMPLE
+    """
+    return req

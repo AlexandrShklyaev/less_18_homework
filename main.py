@@ -61,11 +61,31 @@ def main():
             if is_all_ok:
                 if create_table_connections(cursor, main_table_name,
                                             "animals"):  # создание связующей таблицы и удаление всего лишнего
+
+                    # создание ключей +++
+                    fks_1 = [['animal', 'animals'], ['outcome_subtype', 'outcome_subtypes'],
+                             ['outcome_type', 'outcome_types']]
+                    fks_2 = [['animal_type', 'animal_types'], ['breed', 'breeds'], ['color1', 'colors'],
+                             ['color2', 'colors']]
+                    for each_fk in fks_1:
+                        req_t = get_req_append_fk(main_table_name, each_fk[0], each_fk[1])# создание ключей главной
+                        result, status = execute_req(cursor, req_t)
+                        print(status, main_table_name)
+                    for each_fk in fks_2:
+                        req_t = get_req_append_fk("animals", each_fk[0], each_fk[1])# создание ключей связующей
+                        result, status = execute_req(cursor, req_t)
+                        print(status, "animals")
+                    # создание ключей --
+
                     print("все операции выполнены корректно")
                     user_unwer = input("записать данные в бд? [y/n]:")
                     if user_unwer == "y":
                         connection.commit()
                         print("данные записаны в бд")
+
+
+
+
 
                 else:
                     print("изменения не записаны в бд")
